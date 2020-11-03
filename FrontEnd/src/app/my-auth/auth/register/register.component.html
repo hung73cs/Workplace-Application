@@ -1,0 +1,99 @@
+<h1 id="title" class="title">Register</h1>
+<p class="sub-title">Register to join in the Fsoft Family</p>
+
+<nb-alert *ngIf="showMessages.error && errors?.length && !submitted" outline="danger" role="alert">
+  <p class="alert-title"><b>Oh snap!</b></p>
+  <ul class="alert-message-list">
+    <li *ngFor="let error of errors" class="alert-message">{{ error }}</li>
+  </ul>
+</nb-alert>
+
+<nb-alert *ngIf="showMessages.success && messages?.length && !submitted" outline="success" role="alert">
+  <p class="alert-title"><b>Hooray!</b></p>
+  <ul class="alert-message-list">
+    <li *ngFor="let message of messages" class="alert-message">{{ message }}</li>
+  </ul>
+</nb-alert>
+
+<form (ngSubmit)="register()" #form="ngForm" aria-labelledby="title">
+  <div class="form-control-group">
+    <label class="label" for="input-username">Username:</label>
+    <input nbInput fullWidth [(ngModel)]="userInfo.userName" #username="ngModel" name="username" id="input-username"
+      fieldSize="large" autofocus [status]="username.dirty ? (username.invalid  ? 'danger' : 'success') : 'basic'"
+      [required]="getConfigValue('forms.validation.username.required')"
+      [attr.aria-invalid]="username.invalid && username.touched ? true : null">
+    <ng-container *ngIf="username.invalid && username.touched">
+      <p class="caption status-danger" *ngIf="username.errors?.required">
+        Username is required!
+      </p>
+    </ng-container>
+  </div>
+
+  <div class="form-control-group">
+    <span class="label-with-link">
+      <label class="label" for="input-password">Password:</label>
+    </span>
+    <input nbInput fullWidth [(ngModel)]="userInfo.passWord" #password="ngModel" name="password" id="input-password"
+      fieldSize="large" [status]="password.dirty ? (password.invalid  ? 'danger' : 'success') : 'basic'"
+      [required]="getConfigValue('forms.validation.password.required')" [minlength]=6 [maxlength]=12
+      pattern="(?=.*[a-z])(?=.*[A-Z])(?=.*[0-9])(?=.*[.$@$!%*?&])[A-Za-z\d.$@$!%*?&].{7,}"
+      [attr.aria-invalid]="password.invalid && password.touched ? true : null">
+    <ng-container *ngIf="password.invalid && password.touched ">
+      <p class="caption status-danger" *ngIf="password.errors?.pattern">
+        Password sai format!
+      </p>
+    </ng-container>
+  </div>
+
+  <div class="form-control-group">
+    <span class="label-with-link">
+      <label class="label" for="input-confirmpassword">Confirm Password:</label>
+    </span>
+    <input nbInput fullWidth [(ngModel)]="confirmPassword" name="confirmPassword" id="input-confirmPassword"
+      fieldSize="large" [status]="comparePassword()  ? 'danger' : 'basic'"
+      [required]="getConfigValue('forms.validation.password.required')">
+    <p class="caption status-danger" *ngIf="comparePassword()">
+      Password is not math!
+    </p>
+  </div>
+
+  <div class="form-control-group">
+    <label class="label" for="input-displayName">Display Name:</label>
+    <input nbInput fullWidth [(ngModel)]="userInfo.displayName" #displayName="ngModel" name="displayName"
+      id="input-displayName" fieldSize="large" autofocus
+      [status]="displayName.dirty ? (displayName.invalid  ? 'danger' : 'success') : 'basic'"
+      [required]="getConfigValue('forms.validation.displayName.required')"
+      [attr.aria-invalid]="displayName.invalid && displayName.touched ? true : null">
+    <ng-container *ngIf="displayName.invalid && displayName.touched">
+      <p class="caption status-danger" *ngIf="displayName.errors?.required">
+        displayName is required!
+      </p>
+    </ng-container>
+  </div>
+
+  <div class="form-control-group">
+    <label class="label" for="input-birthday">Birthday:</label>
+    <input nbInput [(ngModel)]="userInfo.birthday" #birthday="ngModel" name="birthday" id="input-birthday"
+      fieldSize="large" [nbDatepicker]="datepicker" _ngcontent-dgn-c347="" nbinput=""
+      class="size-medium status-basic shape-rectangle nb-transition">
+    <nb-datepicker #datepicker format="yyyy-MM-dd"></nb-datepicker>
+  </div>
+
+  <div class="form-control-group">
+    <label class="label" for="input-phoneNumber">Phone Number:</label>
+    <input nbInput [(ngModel)]="userInfo.phoneNumber" #phoneNumber="ngModel" name="phoneNumber" id="input-phoneNumber"
+      fieldSize="large" autofocus [status]="phoneNumber.dirty ? (phoneNumber.invalid  ? 'danger' : 'success') : 'basic'"
+      [required]="getConfigValue('forms.validation.phoneNumber.required')"
+      [attr.aria-invalid]="phoneNumber.invalid && phoneNumber.touched ? true : null">
+    <ng-container *ngIf="phoneNumber.invalid && phoneNumber.touched">
+      <p class="caption status-danger" *ngIf="phoneNumber.errors?.required">
+        phoneNumber is required!
+      </p>
+    </ng-container>
+  </div>
+  
+  <button nbButton fullWidth status="primary" size="large" [disabled]="submitted || !form.valid"
+    [class.btn-pulse]="submitted">
+    Register
+  </button>
+</form>
